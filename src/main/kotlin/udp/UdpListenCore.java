@@ -1,4 +1,4 @@
-package cn.leo.pycar.udp;
+package udp;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

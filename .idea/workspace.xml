@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="635f7a37-00d5-46eb-ac37-da46f08be91e" name="Changes" comment="" />
+    <list default="true" id="635f7a37-00d5-46eb-ac37-da46f08be91e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/WatchTogetherServer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/WatchTogetherServer.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ext/JsonExt.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ext/JsonExt.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ext/LogExt.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ext/LogExt.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/server/Room.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/server/Room.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/server/VideoModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/server/VideoModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/server/WatchTogetherServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/server/WatchTogetherServer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/BigPacketProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/BigPacketProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/DefaultPacketProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/DefaultPacketProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/OnDataArrivedListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/OnDataArrivedListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/PacketProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/PacketProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListenCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListenCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListenEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListenEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSendCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSendCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSender.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSenderImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSenderImpl.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin Object" />
+        <option value="Kotlin Data Class" />
+        <option value="Kotlin File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2BeKAQpte51fRoklTcNLuBPRYbO" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -17,9 +53,40 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "dart.analysis.tool.window.visible": "false"
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "last_opened_file_path": "/Users/ll/Desktop/lingluo/kotlin/WatchTogetherServer/src/main/kotlin/ext",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.5691824",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/kotlin/ext" />
+      <recent name="$PROJECT_DIR$/lib" />
+      <recent name="$PROJECT_DIR$/src/main/kotlin" />
+    </key>
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="server" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="MainKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="MainKt" />
+      <module name="WatchTogetherServer" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Kotlin.MainKt" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -30,5 +97,9 @@
       <updated>1657260980823</updated>
     </task>
     <servers />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

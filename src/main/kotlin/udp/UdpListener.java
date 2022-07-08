@@ -1,4 +1,4 @@
-package cn.leo.pycar.udp;
+package udp;
 
 /**
  * @author : Jarry Leo
