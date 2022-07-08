@@ -7,8 +7,6 @@ import udp.OnDataArrivedListener
 import udp.UdpFrame
 import udp.UdpListener
 import udp.UdpSender
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 object WatchTogetherServer {
@@ -69,13 +67,16 @@ object WatchTogetherServer {
     private fun join(model: VideoModel, host: String) {
         //检查现有房间信息，剔除失效房间
         checkRoom()
+        //判断房间号是否合法
+        val roomId = model.roomId
+        if (roomId.isEmpty()) return
         //判断房间是否存在
         val room = model.getRoom()
         if (room == null) {
             // 不存在创建房间
-            val r = Room(model.roomId, host)
-            roomMap[model.roomId] = r
-            log("$host create room: ${model.roomId}")
+            val r = Room(roomId, host)
+            roomMap[roomId] = r
+            log("$host create room: $roomId")
             send(r.videoModel, host)
             r.videoModel.action = "wait"
         } else {
@@ -83,7 +84,7 @@ object WatchTogetherServer {
             if (room.ownerHost != host) {
                 //不是房主则加入客户端，是房主则同步房间信息
                 room.clientSet.add(host)
-                log("$host join room: ${model.roomId}")
+                log("$host join room: $roomId")
             }
             send(room.videoModel, host)
         }
@@ -137,5 +138,5 @@ object WatchTogetherServer {
             }
         }
     }
-    
+
 }
