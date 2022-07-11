@@ -37,9 +37,10 @@ object WatchTogetherServer {
     }
 
     /**
-     * 发送视频信息
+     * 发送信息
      */
     private fun send(videoModel: VideoModel, host: String) {
+        videoModel.isOwner = host == videoModel.getRoom()?.ownerHost
         sender.setRemoteHost(host)
         sender.send(videoModel.toJson().toByteArray())
     }
@@ -76,6 +77,7 @@ object WatchTogetherServer {
             // 不存在创建房间
             val r = Room(roomId, host)
             roomMap[roomId] = r
+            r.videoModel.roomId = roomId
             log("$host create room: $roomId")
             send(r.videoModel, host)
             r.videoModel.action = "wait"
@@ -85,6 +87,7 @@ object WatchTogetherServer {
                 //不是房主则加入客户端，是房主则同步房间信息
                 room.clientSet.add(host)
                 log("$host join room: $roomId")
+                room.videoModel.action = "join"
             }
             send(room.videoModel, host)
         }
@@ -108,6 +111,7 @@ object WatchTogetherServer {
     private fun clientSync(model: VideoModel, host: String) {
         val room = model.getRoom()
         if (room?.ownerHost != host) return
+        room.videoModel.action = "sync"
         send(room.videoModel, host)
     }
 
