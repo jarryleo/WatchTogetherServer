@@ -104,14 +104,22 @@
       <option name="project" value="LOCAL" />
       <updated>1657513743413</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="[fix] 修复没有指定客户端端口问题">
+      <created>1657528632414</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1657528632414</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="[add] first commit" />
     <MESSAGE value="[fix] 修复移除房间bug" />
     <MESSAGE value="[add] 服务器代码调整" />
-    <option name="LAST_COMMIT_MESSAGE" value="[add] 服务器代码调整" />
+    <MESSAGE value="[fix] 修复没有指定客户端端口问题" />
+    <option name="LAST_COMMIT_MESSAGE" value="[fix] 修复没有指定客户端端口问题" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

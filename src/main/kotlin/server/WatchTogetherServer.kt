@@ -113,7 +113,7 @@ object WatchTogetherServer {
      */
     private fun clientSync(model: VideoModel, host: String) {
         val room = model.getRoom()
-        if (room?.ownerHost != host) return
+        if (room == null || room.ownerHost == host) return
         room.videoModel.action = "sync"
         send(room.videoModel, host)
     }
