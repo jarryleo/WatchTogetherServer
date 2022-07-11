@@ -16,7 +16,7 @@ object WatchTogetherServer {
 
     //udp 相关
     private val udpListener: UdpListener = UdpFrame.getListener()
-    private val sender: UdpSender = UdpFrame.getSender()
+    private val sender: UdpSender = UdpFrame.getSender(port)
 
     //房间信息(key 房间id，value 房间信息)
     private val roomMap = ConcurrentHashMap<String, Room>()
@@ -41,8 +41,10 @@ object WatchTogetherServer {
      */
     private fun send(videoModel: VideoModel, host: String) {
         videoModel.isOwner = host == videoModel.getRoom()?.ownerHost
+        val json = videoModel.toJson()
+        log("send to $host : $json")
         sender.setRemoteHost(host)
-        sender.send(videoModel.toJson().toByteArray())
+        sender.send(json.toByteArray())
     }
 
     /**
@@ -78,6 +80,7 @@ object WatchTogetherServer {
             val r = Room(roomId, host)
             roomMap[roomId] = r
             r.videoModel.roomId = roomId
+            r.videoModel.timestamp = System.currentTimeMillis()
             log("$host create room: $roomId")
             send(r.videoModel, host)
             r.videoModel.action = "wait"
