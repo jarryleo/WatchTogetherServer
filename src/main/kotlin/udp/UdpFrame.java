@@ -7,10 +7,9 @@ import java.util.HashMap;
  * @date : 2019/1/25 13:38
  */
 public class UdpFrame implements UdpListener {
-    private PacketProcessor packetProcessor;
-    private static UdpSender udpSender = new UdpSenderImpl();
-    private static HashMap<Integer, UdpListenEntity> subscribeMap = new HashMap<>();
-    private static HashMap<OnDataArrivedListener, Integer> portMap = new HashMap<>();
+    private final PacketProcessor packetProcessor;
+    private static final HashMap<Integer, UdpListenEntity> subscribeMap = new HashMap<>();
+    private static final HashMap<OnDataArrivedListener, Integer> portMap = new HashMap<>();
 
 
     public UdpFrame(PacketProcessor packetProcessor) {
@@ -27,28 +26,30 @@ public class UdpFrame implements UdpListener {
 
     @Override
     public void subscribe(int port, OnDataArrivedListener onDataArrivedListener) {
+        UdpListenEntity udpListenEntity;
         if (subscribeMap.containsKey(port)) {
-            UdpListenEntity udpListenEntity = subscribeMap.get(port);
-            udpListenEntity.subscribeDataArrivedListener(onDataArrivedListener);
+            udpListenEntity = subscribeMap.get(port);
         } else {
             UdpListenCore udpListenCore = new UdpListenCore(port, packetProcessor);
-            UdpListenEntity udpListenEntity = new UdpListenEntity(udpListenCore);
-            udpListenEntity.subscribeDataArrivedListener(onDataArrivedListener);
+            udpListenEntity = new UdpListenEntity(udpListenCore);
             subscribeMap.put(port, udpListenEntity);
         }
+        udpListenEntity.subscribeDataArrivedListener(onDataArrivedListener);
         portMap.put(onDataArrivedListener, port);
     }
 
     @Override
     public void closePort(int port) {
-        udpSender.setPort(port);
-        //todo 给自己的监听端口发送关闭协议
+        subscribeMap.get(port).close();
+        subscribeMap.remove(port);
     }
 
     @Override
     public void unSubscribe(OnDataArrivedListener onDataArrivedListener) {
         Integer port = portMap.get(onDataArrivedListener);
+        if (port == null) return;
         UdpListenEntity udpListenEntity = subscribeMap.get(port);
+        if (udpListenEntity == null) return;
         int size = udpListenEntity.unsubscribeDataArrivedListener(onDataArrivedListener);
         if (size <= 0) {
             closePort(port);
@@ -62,6 +63,10 @@ public class UdpFrame implements UdpListener {
     }
 
     public static UdpSender getSender(int port) {
+        UdpListenEntity udpListenEntity = subscribeMap.get(port);
+        if (udpListenEntity != null) {
+            return udpListenEntity.getUdpListenCore().getSender();
+        }
         UdpSenderImpl udpSender = new UdpSenderImpl();
         udpSender.setPort(port);
         return udpSender;

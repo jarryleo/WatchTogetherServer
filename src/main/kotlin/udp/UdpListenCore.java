@@ -9,10 +9,12 @@ import java.net.DatagramSocket;
  */
 class UdpListenCore extends Thread {
 
-    private int port;
+    private final int port;
     private DatagramSocket receiveSocket;
     private OnDataArrivedListener onDataArrivedListener;
-    private PacketProcessor packetProcessor;
+    private final PacketProcessor packetProcessor;
+
+    private UdpSender sender;
 
     public void setOnDataArrivedListener(OnDataArrivedListener onDataArrivedListener) {
         this.onDataArrivedListener = onDataArrivedListener;
@@ -33,6 +35,7 @@ class UdpListenCore extends Thread {
     private void listen() {
         try {
             receiveSocket = new DatagramSocket(port);
+            sender = new UdpSenderImpl(receiveSocket);
             byte[] bytes = new byte[packetProcessor.getPacketSize()];
             DatagramPacket packet = new DatagramPacket(bytes, packetProcessor.getPacketSize());
             for (; ; ) {
@@ -47,5 +50,26 @@ class UdpListenCore extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 获取对应socket
+     */
+    public DatagramSocket getReceiveSocket() {
+        return receiveSocket;
+    }
+
+    /**
+     * 获取同端口发送器，同一个socket
+     */
+    public UdpSender getSender() {
+        return sender;
+    }
+
+    /**
+     * 关闭socket
+     */
+    public void close() {
+        receiveSocket.close();
     }
 }

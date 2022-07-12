@@ -9,6 +9,11 @@
     <list default="true" id="635f7a37-00d5-46eb-ac37-da46f08be91e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/server/WatchTogetherServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/server/WatchTogetherServer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListenCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListenCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListenEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListenEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSendCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSendCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSenderImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSenderImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +116,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657528632414</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="[fix] 修复客户端无法同步问题">
+      <created>1657531496966</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1657531496966</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -119,7 +131,15 @@
     <MESSAGE value="[fix] 修复移除房间bug" />
     <MESSAGE value="[add] 服务器代码调整" />
     <MESSAGE value="[fix] 修复没有指定客户端端口问题" />
-    <option name="LAST_COMMIT_MESSAGE" value="[fix] 修复没有指定客户端端口问题" />
+    <MESSAGE value="[fix] 修复客户端无法同步问题" />
+    <option name="LAST_COMMIT_MESSAGE" value="[fix] 修复客户端无法同步问题" />
+  </component>
+  <component name="XDebuggerManager">
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="udp.UdpSenderImpl" memberName="udpSendCore" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

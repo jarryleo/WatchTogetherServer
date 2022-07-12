@@ -1,5 +1,6 @@
 package udp;
 
+import java.net.DatagramSocket;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -14,10 +15,15 @@ class UdpSenderImpl implements UdpSender {
     private String remoteHost = "127.0.0.1";
     private int port = UdpConfig.DEFAULT_LISTEN_PORT;
     private PacketProcessor packetProcessor = new DefaultPacketProcessor();
-    private UdpSendCore udpSendCore = new UdpSendCore();
+    private UdpSendCore udpSendCore ;
     private String broadcastHost = "255.255.255.255";
 
     public UdpSenderImpl() {
+        udpSendCore = new UdpSendCore();
+    }
+
+    public UdpSenderImpl(DatagramSocket socket) {
+        udpSendCore = new UdpSendCore(socket);
     }
 
     public UdpSenderImpl(String remoteHost, int port) {

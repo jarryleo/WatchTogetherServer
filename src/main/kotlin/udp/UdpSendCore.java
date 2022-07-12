@@ -19,6 +19,10 @@ class UdpSendCore {
         createSendSocket();
     }
 
+    public UdpSendCore(DatagramSocket socket) {
+        sendSocket = socket;
+    }
+
     private void createSendSocket() {
         try {
             sendSocket = new DatagramSocket();

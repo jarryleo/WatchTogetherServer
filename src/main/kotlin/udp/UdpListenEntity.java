@@ -31,4 +31,16 @@ class UdpListenEntity implements OnDataArrivedListener {
             onDataArrivedListener.onDataArrived(data, host);
         }
     }
+
+    public UdpListenCore getUdpListenCore() {
+        return udpListenCore;
+    }
+
+    /**
+     * 关闭端口，并清理监听
+     */
+    public void close(){
+        udpListenCore.close();
+        onDataArrivedListenerList.clear();
+    }
 }
