@@ -7,12 +7,13 @@ import udp.OnDataArrivedListener
 import udp.UdpFrame
 import udp.UdpListener
 import udp.UdpSender
+import java.net.InetSocketAddress
 import java.util.concurrent.ConcurrentHashMap
 
 object WatchTogetherServer {
 
     //服务器监听端口
-    private const val port = 51127
+    private const val sPort = 51127
 
     //udp 相关
     private val udpListener: UdpListener = UdpFrame.getListener()
@@ -25,12 +26,13 @@ object WatchTogetherServer {
      * 开启服务
      */
     fun start() {
-        udpListener.subscribe(port, object : OnDataArrivedListener {
-            override fun onDataArrived(data: ByteArray, host: String) {
+        udpListener.subscribe(sPort, object : OnDataArrivedListener {
+            override fun onDataArrived(data: ByteArray, host: String, port: Int) {
                 val json = String(data)
+                //log("receive $host:$port: $json")
                 val bean = json.jsonToBean(VideoModel::class.java)
                 if (bean != null) {
-                    dispatcher(bean, host)
+                    dispatcher(bean, host, port)
                 }
             }
         })
@@ -39,13 +41,13 @@ object WatchTogetherServer {
     /**
      * 发送信息
      */
-    private fun send(videoModel: VideoModel, host: String) {
-        if (sender == null){
+    private fun send(videoModel: VideoModel, host: String, port: Int) {
+        if (sender == null) {
             sender = UdpFrame.getSender(port)
         }
         videoModel.isOwner = host == videoModel.getRoom()?.ownerHost
         val json = videoModel.toJson()
-        log("send to $host : $json")
+        log("send to $host:$port : $json")
         sender?.setRemoteHost(host)
         sender?.setPort(port)
         sender?.send(json.toByteArray())
@@ -54,12 +56,12 @@ object WatchTogetherServer {
     /**
      * 事件分发
      */
-    private fun dispatcher(model: VideoModel, host: String) {
+    private fun dispatcher(model: VideoModel, host: String, port: Int) {
         when (model.action) {
-            "join" -> join(model, host)
+            "join" -> join(model, host, port)
             "url", "play", "pause", "seek" -> changeState(model, host)
-            "sync" -> clientSync(model, host)
-            "heartbeat" -> heartbeat(model, host)
+            "sync" -> clientSync(model, host, port)
+            "heartbeat" -> heartbeat(model, host, port)
         }
     }
 
@@ -71,7 +73,7 @@ object WatchTogetherServer {
     /**
      * 加入或者创建房间
      */
-    private fun join(model: VideoModel, host: String) {
+    private fun join(model: VideoModel, host: String, port: Int) {
         //检查现有房间信息，剔除失效房间
         checkRoom()
         //判断房间号是否合法
@@ -81,22 +83,23 @@ object WatchTogetherServer {
         val room = model.getRoom()
         if (room == null) {
             // 不存在创建房间
-            val r = Room(roomId, host)
+            val r = Room(roomId, host, port)
             roomMap[roomId] = r
             r.videoModel.roomId = roomId
             r.videoModel.timestamp = System.currentTimeMillis()
-            log("$host create room: $roomId")
-            send(r.videoModel, host)
+            log("$host:$port create room: $roomId")
+            send(r.videoModel, host, port)
             r.videoModel.action = "wait"
         } else {
             //房间存在
             if (room.ownerHost != host) {
                 //不是房主则加入客户端，是房主则同步房间信息
-                room.clientSet.add(host)
-                log("$host join room: $roomId")
+                val address = InetSocketAddress(host, port)
+                room.clientSet.add(address)
+                log("$host:$port join room: $roomId")
                 room.videoModel.action = "join"
             }
-            send(room.videoModel, host)
+            send(room.videoModel, host, port)
         }
     }
 
@@ -108,28 +111,35 @@ object WatchTogetherServer {
         if (room?.ownerHost != host) return
         room.videoModel = model
         room.clientSet.forEach {
-            send(model, it)
+            send(model, it.hostString, it.port)
         }
     }
 
     /**
      * 客户端同步数据
      */
-    private fun clientSync(model: VideoModel, host: String) {
+    private fun clientSync(model: VideoModel, host: String, port: Int) {
         val room = model.getRoom()
         if (room == null || room.ownerHost == host) return
         room.videoModel.action = "sync"
-        send(room.videoModel, host)
+        send(room.videoModel, host, port)
     }
 
     /**
      * 房主心跳，记录时间，客户端心跳不理会
      */
-    private fun heartbeat(model: VideoModel, host: String) {
+    private fun heartbeat(model: VideoModel, host: String, port :Int) {
         val room = model.getRoom()
         if (room?.ownerHost == host) {
             room.ownerLastHeartbeat = System.currentTimeMillis()
             room.videoModel = model
+            room.ownerPort = port
+        }else{
+            val client = room?.clientSet?.find { it.hostString == host }
+            if (client != null && client.port != port){
+                room.clientSet.remove(client)
+                room.clientSet.add(InetSocketAddress(host,port))
+            }
         }
     }
 

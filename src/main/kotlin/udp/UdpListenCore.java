@@ -41,10 +41,11 @@ class UdpListenCore extends Thread {
             for (; ; ) {
                 receiveSocket.receive(packet);
                 String host = packet.getAddress().getHostAddress();
+                int port = packet.getPort();
                 int length = packet.getLength();
                 packetProcessor.mergePacket(bytes, length, host);
                 if (packetProcessor.isMergeSuccess(host)) {
-                    onDataArrivedListener.onDataArrived(packetProcessor.getMergedData(host), host);
+                    onDataArrivedListener.onDataArrived(packetProcessor.getMergedData(host), host, port);
                 }
             }
         } catch (Exception e) {

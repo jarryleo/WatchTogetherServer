@@ -8,12 +8,11 @@
   <component name="ChangeListManager">
     <list default="true" id="635f7a37-00d5-46eb-ac37-da46f08be91e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/server/Room.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/server/Room.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/server/WatchTogetherServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/server/WatchTogetherServer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/OnDataArrivedListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/OnDataArrivedListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListenCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListenCore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListenEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListenEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSendCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSendCore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSenderImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSenderImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +122,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657531496966</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="[fix] 尝试修复服务器发送数据客服端无法接收到问题">
+      <created>1657593351994</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1657593351994</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -132,9 +138,19 @@
     <MESSAGE value="[add] 服务器代码调整" />
     <MESSAGE value="[fix] 修复没有指定客户端端口问题" />
     <MESSAGE value="[fix] 修复客户端无法同步问题" />
-    <option name="LAST_COMMIT_MESSAGE" value="[fix] 修复客户端无法同步问题" />
+    <MESSAGE value="[fix] 尝试修复服务器发送数据客服端无法接收到问题" />
+    <option name="LAST_COMMIT_MESSAGE" value="[fix] 尝试修复服务器发送数据客服端无法接收到问题" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/kotlin/udp/UdpSendCore.java</url>
+          <line>56</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="udp.UdpSenderImpl" memberName="udpSendCore" />

@@ -5,5 +5,5 @@ package udp;
  * @date : 2019/1/25 13:42
  */
 public interface OnDataArrivedListener {
-    void onDataArrived(byte[] data, String host);
+    void onDataArrived(byte[] data, String host ,int port);
 }
