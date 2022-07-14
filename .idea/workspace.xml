@@ -7,25 +7,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="635f7a37-00d5-46eb-ac37-da46f08be91e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/tcp/TcpExt.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/tcp/TcpServer.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/tcp/TcpServerInterface.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/server/Room.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/server/Room.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/server/WatchTogetherServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/server/WatchTogetherServer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/BigPacketProcessor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/DefaultPacketProcessor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/OnDataArrivedListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/PacketProcessor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpFrame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListenCore.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListenEntity.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSendCore.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSender.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/udp/UdpSenderImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/tcp/TcpServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/tcp/TcpServer.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -157,7 +141,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657685350852</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="[add] tcp版本提交">
+      <created>1657787820530</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1657787820530</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -168,7 +159,8 @@
     <MESSAGE value="[fix] 修复客户端无法同步问题" />
     <MESSAGE value="[fix] 尝试修复服务器发送数据客服端无法接收到问题" />
     <MESSAGE value="[add] 记录客户端端口" />
-    <option name="LAST_COMMIT_MESSAGE" value="[add] 记录客户端端口" />
+    <MESSAGE value="[add] tcp版本提交" />
+    <option name="LAST_COMMIT_MESSAGE" value="[add] tcp版本提交" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -177,11 +169,6 @@
           <url>file://$PROJECT_DIR$/src/main/kotlin/udp/UdpSendCore.java</url>
           <line>56</line>
           <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/src/main/kotlin/tcp/TcpServer.kt</url>
-          <line>53</line>
-          <option name="timeStamp" value="13" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

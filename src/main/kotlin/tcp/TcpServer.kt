@@ -80,17 +80,21 @@ class TcpServer : Thread(), TcpServerInterface {
             while (it.hasNext()) {
                 val key = it.next()
                 it.remove()
-                when {
-                    key.isAcceptable -> accept(key)
-                    key.isReadable -> receive(key)
-                    key.isWritable -> send(key)
-                    key.isValid -> {
-                        valid(key)
-                        continue
-                    }
-                    key.isConnectable -> {
-                        log("Connectable!")
-                    }
+                if (!key.isValid) {
+                    valid(key)
+                    continue
+                }
+                if (key.isAcceptable) {
+                    accept(key)
+                }
+                if (key.isReadable) {
+                    receive(key)
+                }
+                if (key.isWritable) {
+                    send(key)
+                }
+                if (key.isConnectable) {
+                    log("Connectable!")
                 }
             }
         }
@@ -100,17 +104,15 @@ class TcpServer : Thread(), TcpServerInterface {
      * 接受客户端连接请求
      */
     private fun accept(key: SelectionKey) {
-        val channel = (key.channel() as ServerSocketChannel)
-        val socketChannel = channel.accept()
-        val address = socketChannel.socket().inetAddress
-        val port = socketChannel.socket().port
-        val mapKey = "$address:$port"
-        clientMap[mapKey] = socketChannel
+        val serverChannel = (key.channel() as? ServerSocketChannel) ?: return
+        val channel = serverChannel.accept()
+        val mapKey = channel.addressText()
+        clientMap[mapKey] = channel
         log("client accept ：$mapKey")
-        socketChannel.configureBlocking(false)
+        channel.configureBlocking(false)
         val buffer = ByteBuffer.allocate(1024)
-        socketChannel.register(key.selector(), SelectionKey.OP_READ and SelectionKey.OP_WRITE, buffer)
-        acceptEvent?.onAccept(socketChannel)
+        channel.register(key.selector(), SelectionKey.OP_READ /*or SelectionKey.OP_WRITE*/, buffer)
+        acceptEvent?.onAccept(channel)
     }
 
     /**
@@ -123,24 +125,25 @@ class TcpServer : Thread(), TcpServerInterface {
         var readLength: Int
         while (channel.read(buffer).also { readLength = it } > 0) {
             buffer.flip()
-            byteArrayOutputStream.write(buffer.array())
+            byteArrayOutputStream.write(buffer.array(),buffer.arrayOffset(),buffer.limit())
             buffer.clear()
             // 最后一包读取特殊处理,不然会一直等待读入
             if (readLength != buffer.capacity()) {
                 break
             }
         }
-        dataEvent?.onData(byteArrayOutputStream.toByteArray(),channel)
+        dataEvent?.onData(byteArrayOutputStream.toByteArray(), channel)
         byteArrayOutputStream.close()
     }
 
 
+    /**
+     * 通道可写，这个事件只要通道空闲就是一直可写，不太需要关注
+     */
     private fun send(key: SelectionKey) {
         //val buffer = (key.attachment() as? ByteBuffer) ?: ByteBuffer.allocate(1024)
         val channel = key.channel() as? SocketChannel ?: return
         log("isWritable : ${channel.addressText()}")
-        //buffer.flip()
-        //channel.write(buffer)
     }
 
     /**
@@ -150,6 +153,7 @@ class TcpServer : Thread(), TcpServerInterface {
         val channel = key.channel() as? SocketChannel ?: return
         clientMap.remove(channel.addressText())
         disconnectEvent?.onDisconnect(channel)
+        log("onDisconnect : ${channel.addressText()}")
     }
 
     /**

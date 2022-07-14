@@ -27,7 +27,7 @@ object WatchTogetherServer {
         tcpServer.subscribe(sPort,
             dataEvent = { data, channel ->
                 val json = String(data)
-                //log("receive $host:$port: $json")
+                log("receive ${channel.addressText()}: $json")
                 val bean = json.jsonToBean(VideoModel::class.java)
                 if (bean != null) {
                     dispatcher(bean, channel)
