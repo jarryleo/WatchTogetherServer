@@ -94,7 +94,7 @@ class TcpServer : Thread(), TcpServerInterface {
                     send(key)
                 }
                 if (key.isConnectable) {
-                    log("Connectable!")
+                    //log("Connectable!")
                 }
             }
         }
@@ -143,7 +143,7 @@ class TcpServer : Thread(), TcpServerInterface {
     private fun send(key: SelectionKey) {
         //val buffer = (key.attachment() as? ByteBuffer) ?: ByteBuffer.allocate(1024)
         val channel = key.channel() as? SocketChannel ?: return
-        log("isWritable : ${channel.addressText()}")
+        //log("isWritable : ${channel.addressText()}")
     }
 
     /**
@@ -153,7 +153,7 @@ class TcpServer : Thread(), TcpServerInterface {
         val channel = key.channel() as? SocketChannel ?: return
         clientMap.remove(channel.addressText())
         disconnectEvent?.onDisconnect(channel)
-        log("onDisconnect : ${channel.addressText()}")
+        //log("onDisconnect : ${channel.addressText()}")
     }
 
     /**

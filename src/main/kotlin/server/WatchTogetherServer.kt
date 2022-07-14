@@ -27,7 +27,7 @@ object WatchTogetherServer {
         tcpServer.subscribe(sPort,
             dataEvent = { data, channel ->
                 val json = String(data)
-                log("receive ${channel.addressText()}: $json")
+                //log("receive ${channel.addressText()}: $json")
                 val bean = json.jsonToBean(VideoModel::class.java)
                 if (bean != null) {
                     dispatcher(bean, channel)
@@ -49,7 +49,7 @@ object WatchTogetherServer {
         videoModel.isOwner = channel == videoModel.getRoom()?.ownerChannel
         val json = videoModel.toJson()
         channel.write(ByteBuffer.wrap(json.toByteArray()))
-        log("send to ${channel.addressText()} : $json")
+        //log("send to ${channel.addressText()} : $json")
     }
 
     /**

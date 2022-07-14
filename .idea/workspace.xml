@@ -148,7 +148,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657787820530</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="[add] tcp版本完成">
+      <created>1657791289797</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1657791289797</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -160,7 +167,8 @@
     <MESSAGE value="[fix] 尝试修复服务器发送数据客服端无法接收到问题" />
     <MESSAGE value="[add] 记录客户端端口" />
     <MESSAGE value="[add] tcp版本提交" />
-    <option name="LAST_COMMIT_MESSAGE" value="[add] tcp版本提交" />
+    <MESSAGE value="[add] tcp版本完成" />
+    <option name="LAST_COMMIT_MESSAGE" value="[add] tcp版本完成" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
