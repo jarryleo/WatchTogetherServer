@@ -3,11 +3,10 @@ package server
 import ext.jsonToBean
 import ext.log
 import ext.toJson
-import udp.OnDataArrivedListener
-import udp.UdpFrame
-import udp.UdpListener
-import udp.UdpSender
-import java.net.InetSocketAddress
+import tcp.TcpServer
+import tcp.addressText
+import java.nio.ByteBuffer
+import java.nio.channels.SocketChannel
 import java.util.concurrent.ConcurrentHashMap
 
 object WatchTogetherServer {
@@ -15,9 +14,8 @@ object WatchTogetherServer {
     //服务器监听端口
     private const val sPort = 51127
 
-    //udp 相关
-    private val udpListener: UdpListener = UdpFrame.getListener()
-    private var sender: UdpSender? = null
+    //tcp 相关
+    private val tcpServer = TcpServer()
 
     //房间信息(key 房间id，value 房间信息)
     private val roomMap = ConcurrentHashMap<String, Room>()
@@ -26,42 +24,43 @@ object WatchTogetherServer {
      * 开启服务
      */
     fun start() {
-        udpListener.subscribe(sPort, object : OnDataArrivedListener {
-            override fun onDataArrived(data: ByteArray, host: String, port: Int) {
+        tcpServer.subscribe(sPort,
+            dataEvent = { data, channel ->
                 val json = String(data)
                 //log("receive $host:$port: $json")
                 val bean = json.jsonToBean(VideoModel::class.java)
                 if (bean != null) {
-                    dispatcher(bean, host, port)
+                    dispatcher(bean, channel)
                 }
+            },
+            standbyEvent = {
+                log("Watch Together start success!")
+            },
+            errorEvent = {
+                log("Watch Together start failed!")
             }
-        })
+        )
     }
 
     /**
      * 发送信息
      */
-    private fun send(videoModel: VideoModel, host: String, port: Int) {
-        if (sender == null) {
-            sender = UdpFrame.getSender(port)
-        }
-        videoModel.isOwner = host == videoModel.getRoom()?.ownerHost
+    private fun send(videoModel: VideoModel, channel: SocketChannel) {
+        videoModel.isOwner = channel == videoModel.getRoom()?.ownerChannel
         val json = videoModel.toJson()
-        log("send to $host:$port : $json")
-        sender?.setRemoteHost(host)
-        sender?.setPort(port)
-        sender?.send(json.toByteArray())
+        channel.write(ByteBuffer.wrap(json.toByteArray()))
+        log("send to ${channel.addressText()} : $json")
     }
 
     /**
      * 事件分发
      */
-    private fun dispatcher(model: VideoModel, host: String, port: Int) {
+    private fun dispatcher(model: VideoModel, channel: SocketChannel) {
         when (model.action) {
-            "join" -> join(model, host, port)
-            "url", "play", "pause", "seek" -> changeState(model, host)
-            "sync" -> clientSync(model, host, port)
-            "heartbeat" -> heartbeat(model, host, port)
+            "join" -> join(model, channel)
+            "url", "play", "pause", "seek" -> changeState(model, channel)
+            "sync" -> clientSync(model, channel)
+            "heartbeat" -> heartbeat(model, channel)
         }
     }
 
@@ -73,7 +72,7 @@ object WatchTogetherServer {
     /**
      * 加入或者创建房间
      */
-    private fun join(model: VideoModel, host: String, port: Int) {
+    private fun join(model: VideoModel, channel: SocketChannel) {
         //检查现有房间信息，剔除失效房间
         checkRoom()
         //判断房间号是否合法
@@ -83,63 +82,55 @@ object WatchTogetherServer {
         val room = model.getRoom()
         if (room == null) {
             // 不存在创建房间
-            val r = Room(roomId, host, port)
+            val r = Room(roomId, ownerChannel = channel)
             roomMap[roomId] = r
             r.videoModel.roomId = roomId
             r.videoModel.timestamp = System.currentTimeMillis()
-            log("$host:$port create room: $roomId")
-            send(r.videoModel, host, port)
+            log("${channel.addressText()} create room: $roomId")
+            send(r.videoModel, channel)
             r.videoModel.action = "wait"
         } else {
             //房间存在
-            if (room.ownerHost != host) {
+            if (room.ownerChannel != channel) {
                 //不是房主则加入客户端，是房主则同步房间信息
-                val address = InetSocketAddress(host, port)
-                room.clientSet.add(address)
-                log("$host:$port join room: $roomId")
+                room.clientSet.add(channel)
+                log("${channel.addressText()} join room: $roomId")
                 room.videoModel.action = "join"
             }
-            send(room.videoModel, host, port)
+            send(room.videoModel, channel)
         }
     }
 
     /**
      * 房主改变播放状态，同步到所有客户端
      */
-    private fun changeState(model: VideoModel, host: String) {
+    private fun changeState(model: VideoModel, channel: SocketChannel) {
         val room = model.getRoom()
-        if (room?.ownerHost != host) return
+        if (room?.ownerChannel != channel) return
         room.videoModel = model
-        room.clientSet.forEach {
-            send(model, it.hostString, it.port)
+        room.clientSet.forEach { client ->
+            send(model, client)
         }
     }
 
     /**
      * 客户端同步数据
      */
-    private fun clientSync(model: VideoModel, host: String, port: Int) {
+    private fun clientSync(model: VideoModel, channel: SocketChannel) {
         val room = model.getRoom()
-        if (room == null || room.ownerHost == host) return
+        if (room == null || room.ownerChannel == channel) return
         room.videoModel.action = "sync"
-        send(room.videoModel, host, port)
+        send(room.videoModel, channel)
     }
 
     /**
      * 房主心跳，记录时间，客户端心跳不理会
      */
-    private fun heartbeat(model: VideoModel, host: String, port :Int) {
+    private fun heartbeat(model: VideoModel, channel: SocketChannel) {
         val room = model.getRoom()
-        if (room?.ownerHost == host) {
+        if (room?.ownerChannel == channel) {
             room.ownerLastHeartbeat = System.currentTimeMillis()
             room.videoModel = model
-            room.ownerPort = port
-        }else{
-            val client = room?.clientSet?.find { it.hostString == host }
-            if (client != null && client.port != port){
-                room.clientSet.remove(client)
-                room.clientSet.add(InetSocketAddress(host,port))
-            }
         }
     }
 
@@ -154,7 +145,19 @@ object WatchTogetherServer {
         }
         timeMap.forEach { (roomId, time) ->
             if (current - time > 30 * 1000L) {
-                roomMap.remove(roomId)
+                try {
+                    val room = roomMap.remove(roomId)
+                    if (room != null) {
+                        //关闭房主的连接
+                        room.ownerChannel?.close()
+                        //关闭所有客户端连接
+                        room.clientSet.forEach {
+                            it.close()
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
                 log("destroy room: $roomId")
             }
         }
