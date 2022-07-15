@@ -110,11 +110,13 @@ object WatchTogetherServer {
                     kotlin.math.abs(current - room.ownerLastHeartbeat) > 9){
                     room.ownerChannel = channel
                     room.videoModel.action = "join"
+                    room.videoModel.isOwner = true
                     log("${channel.addressText()} reconnect room: $roomId")
                 }else{
                     //观众
                     room.clientSet.add(channel)
                     room.videoModel.action = "join"
+                    room.videoModel.isOwner = false
                     log("${channel.addressText()} join room: $roomId")
                 }
                 send(room.videoModel, channel)
