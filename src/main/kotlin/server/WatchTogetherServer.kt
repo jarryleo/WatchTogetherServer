@@ -5,6 +5,7 @@ import ext.log
 import ext.toJson
 import tcp.TcpServer
 import tcp.addressText
+import java.lang.Math.abs
 import java.nio.ByteBuffer
 import java.nio.channels.SocketChannel
 import java.util.concurrent.ConcurrentHashMap
@@ -40,7 +41,12 @@ object WatchTogetherServer {
             standbyEvent = {
                 log("Watch Together start success!")
             },
+            disconnectEvent = {
+                val key = it.addressText()
+                log("$key disconnect")
+            },
             errorEvent = {
+                //it.printStackTrace()
                 log("error : ${it.message}")
             }
         )
@@ -62,6 +68,7 @@ object WatchTogetherServer {
     private fun dispatcher(model: VideoModel, channel: SocketChannel) {
         when (model.action) {
             "join" -> join(model, channel)
+            "exit" -> exit(model, channel)
             "url", "play", "pause", "seek" -> changeState(model, channel)
             "sync" -> clientSync(model, channel)
             "heartbeat" -> heartbeat(model, channel)
@@ -89,6 +96,7 @@ object WatchTogetherServer {
             val r = Room(roomId, ownerChannel = channel)
             roomMap[roomId] = r
             r.videoModel.roomId = roomId
+            r.videoModel.isOwner = true
             r.videoModel.timestamp = System.currentTimeMillis()
             log("${channel.addressText()} create room: $roomId")
             send(r.videoModel, channel)
@@ -96,15 +104,46 @@ object WatchTogetherServer {
         } else {
             //房间存在
             if (room.ownerChannel != channel) {
-                //不是房主则加入客户端，是房主则同步房间信息
-                room.clientSet.add(channel)
-                log("${channel.addressText()} join room: $roomId")
-                room.videoModel.action = "join"
+                val current = System.currentTimeMillis()
+                //房主
+                if (model.isOwner &&
+                    kotlin.math.abs(current - room.ownerLastHeartbeat) > 9){
+                    room.ownerChannel = channel
+                    room.videoModel.action = "join"
+                    log("${channel.addressText()} reconnect room: $roomId")
+                }else{
+                    //观众
+                    room.clientSet.add(channel)
+                    room.videoModel.action = "join"
+                    log("${channel.addressText()} join room: $roomId")
+                }
+                send(room.videoModel, channel)
+            }else{
+                room.videoModel.isOwner = true
+                send(room.videoModel, channel)
             }
-            send(room.videoModel, channel)
         }
     }
 
+    /**
+     * 退出房间
+     */
+    private fun exit(model: VideoModel, channel: SocketChannel) {
+        //判断房间号是否合法
+        val roomId = model.roomId
+        if (roomId.isEmpty()) return
+        //判断房间是否存在
+        val room = model.getRoom()?:return
+        //房主退出(解散房间)
+        if (channel == room.ownerChannel){
+            room.ownerLastHeartbeat = 0
+            checkRoom()
+        }else{
+            //观众退出
+            room.clientSet.remove(channel)
+        }
+        log("${channel.addressText()} exit room: $roomId")
+    }
     /**
      * 房主改变播放状态，同步到所有客户端
      */
@@ -144,7 +183,7 @@ object WatchTogetherServer {
     }
 
     /**
-     * 检查现有的房间，是否有房主超过30秒没心跳，有则销毁对应房间
+     * 检查现有的房间，是否有房主超过120秒没心跳，有则销毁对应房间
      */
     private fun checkRoom() {
         val current = System.currentTimeMillis()
@@ -153,14 +192,16 @@ object WatchTogetherServer {
             timeMap[roomId] = room.ownerLastHeartbeat
         }
         timeMap.forEach { (roomId, time) ->
-            if (current - time > 30 * 1000L) {
+            if (current - time > 120 * 1000L) {
                 try {
                     val room = roomMap.remove(roomId)
                     if (room != null) {
                         //关闭房主的连接
-                        room.ownerChannel?.close()
+                        room.ownerChannel = null
                         //关闭所有客户端连接
                         room.clientSet.forEach {
+                            room.videoModel.action = "exit"
+                            send(room.videoModel,it)
                             it.close()
                         }
                     }

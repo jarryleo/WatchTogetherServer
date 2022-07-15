@@ -8,15 +8,9 @@ import java.nio.channels.SelectionKey
 import java.nio.channels.Selector
 import java.nio.channels.ServerSocketChannel
 import java.nio.channels.SocketChannel
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.properties.Delegates
 
 class TcpServer : Thread(), TcpServerInterface {
-
-    /**
-     * 已连接客户端
-     */
-    private val clientMap = ConcurrentHashMap<String, SocketChannel>()
 
     /**
      * 服务器监听通道
@@ -76,7 +70,7 @@ class TcpServer : Thread(), TcpServerInterface {
         try {
             //遍历选择器事件
             select(selector)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             //e.printStackTrace()
             errorEvent?.onError(e)
             select(selector)
@@ -103,9 +97,9 @@ class TcpServer : Thread(), TcpServerInterface {
                 /*if (key.isWritable) {
                     send(key)
                 }*/
-                if (key.isConnectable) {
+                /*if (key.isConnectable) {
                     log("Connectable!")
-                }
+                }*/
             }
         }
     }
@@ -114,37 +108,44 @@ class TcpServer : Thread(), TcpServerInterface {
      * 接受客户端连接请求
      */
     private fun accept(key: SelectionKey) {
-        val serverChannel = (key.channel() as? ServerSocketChannel) ?: return
-        val channel = serverChannel.accept()
-        val mapKey = channel.addressText()
-        clientMap[mapKey] = channel
-        log("client accept ：$mapKey")
-        channel.configureBlocking(false)
-        val buffer = ByteBuffer.allocate(1024)
-        channel.register(key.selector(), SelectionKey.OP_READ /*or SelectionKey.OP_WRITE*/, buffer)
-        acceptEvent?.onAccept(channel)
+        try {
+            val serverChannel = (key.channel() as? ServerSocketChannel) ?: return
+            val channel = serverChannel.accept()
+            val mapKey = channel.addressText()
+            log("client accept ：$mapKey")
+            channel.configureBlocking(false)
+            val buffer = ByteBuffer.allocate(1024)
+            channel.register(key.selector(), SelectionKey.OP_READ /*or SelectionKey.OP_WRITE*/, buffer)
+            acceptEvent?.onAccept(channel)
+        } catch (e: Exception) {
+            errorEvent?.onError(e)
+        }
     }
 
     /**
      * 收到客户端发来的数据
      */
     private fun receive(key: SelectionKey) {
-        val buffer = (key.attachment() as? ByteBuffer) ?: ByteBuffer.allocate(1024)
-        val channel = key.channel() as? SocketChannel ?: return
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        var readLength: Int
-        while (channel.read(buffer).also { readLength = it } > 0) {
-            buffer.flip()
-            byteArrayOutputStream.write(buffer.array(),buffer.arrayOffset(),buffer.limit())
-            buffer.clear()
-            // 最后一包读取特殊处理,不然会一直等待读入
-            if (readLength != buffer.capacity()) {
-                break
+        try {
+            val buffer = (key.attachment() as? ByteBuffer) ?: ByteBuffer.allocate(1024)
+            val channel = key.channel() as? SocketChannel ?: return
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            var readLength: Int
+            while (channel.read(buffer).also { readLength = it } > 0) {
+                buffer.flip()
+                byteArrayOutputStream.write(buffer.array(), buffer.arrayOffset(), buffer.limit())
+                buffer.clear()
+                // 最后一包读取特殊处理,不然会一直等待读入
+                if (readLength != buffer.capacity()) {
+                    break
+                }
             }
+            if (readLength == -1) return
+            dataEvent?.onData(byteArrayOutputStream.toByteArray(), channel)
+            byteArrayOutputStream.close()
+        } catch (e: Exception) {
+            errorEvent?.onError(e)
         }
-        if (readLength == -1) return
-        dataEvent?.onData(byteArrayOutputStream.toByteArray(), channel)
-        byteArrayOutputStream.close()
     }
 
 
@@ -161,10 +162,13 @@ class TcpServer : Thread(), TcpServerInterface {
      * 连接失效，客户端断开连接等
      */
     private fun valid(key: SelectionKey) {
-        val channel = key.channel() as? SocketChannel ?: return
-        clientMap.remove(channel.addressText())
-        disconnectEvent?.onDisconnect(channel)
-        //log("onDisconnect : ${channel.addressText()}")
+        try {
+            val channel = key.channel() as? SocketChannel ?: return
+            disconnectEvent?.onDisconnect(channel)
+            //log("onDisconnect : ${channel.addressText()}")
+        } catch (e: Exception) {
+            errorEvent?.onError(e)
+        }
     }
 
     /**
@@ -173,10 +177,6 @@ class TcpServer : Thread(), TcpServerInterface {
     override fun close() {
         try {
             serverChannel?.close()
-            clientMap.values.forEach {
-                it.close()
-                disconnectEvent?.onDisconnect(it)
-            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

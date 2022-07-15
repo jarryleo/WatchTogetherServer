@@ -8,6 +8,7 @@
   <component name="ChangeListManager">
     <list default="true" id="635f7a37-00d5-46eb-ac37-da46f08be91e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/server/Room.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/server/Room.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/server/WatchTogetherServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/server/WatchTogetherServer.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/tcp/TcpServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/tcp/TcpServer.kt" afterDir="false" />
     </list>
@@ -176,7 +177,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657854659011</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="[add] 优化服务端稳定性">
+      <created>1657857011688</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1657857011688</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -191,7 +199,8 @@
     <MESSAGE value="[add] tcp版本完成" />
     <MESSAGE value="[add] 缩减日志" />
     <MESSAGE value="[add] 优化" />
-    <option name="LAST_COMMIT_MESSAGE" value="[add] 优化" />
+    <MESSAGE value="[add] 优化服务端稳定性" />
+    <option name="LAST_COMMIT_MESSAGE" value="[add] 优化服务端稳定性" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
