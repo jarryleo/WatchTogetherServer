@@ -11,7 +11,7 @@ inline fun <reified T> String?.jsonToBean(clazz: Class<T>): T? {
     return try {
         Gson().fromJson(this, clazz)
     } catch (e: Exception) {
-        e.printStackTrace()
+        //e.printStackTrace()
         null
     }
 }

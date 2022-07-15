@@ -31,6 +31,10 @@ object WatchTogetherServer {
                 val bean = json.jsonToBean(VideoModel::class.java)
                 if (bean != null) {
                     dispatcher(bean, channel)
+                }else{
+                    //json 解析错误，关闭连接，防止攻击
+                    log("${channel.addressText()} JsonSyntaxException")
+                    channel.close()
                 }
             },
             standbyEvent = {
@@ -129,6 +133,11 @@ object WatchTogetherServer {
     private fun heartbeat(model: VideoModel, channel: SocketChannel) {
         val room = model.getRoom()
         if (room?.ownerChannel == channel) {
+            //url 数据一般很长，节省服务器带宽，心跳包不再携带url
+            val url = room.videoModel.url
+            if (model.url.isEmpty() && url.isNotEmpty()){
+                model.url = url
+            }
             room.ownerLastHeartbeat = System.currentTimeMillis()
             room.videoModel = model
         }

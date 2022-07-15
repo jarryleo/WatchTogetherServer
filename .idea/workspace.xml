@@ -6,10 +6,10 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="635f7a37-00d5-46eb-ac37-da46f08be91e" name="Changes" comment="">
+    <list default="true" id="635f7a37-00d5-46eb-ac37-da46f08be91e" name="Changes" comment="[add] 优化">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/ext/JsonExt.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/ext/JsonExt.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/server/WatchTogetherServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/server/WatchTogetherServer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/tcp/TcpServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/tcp/TcpServer.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,7 +155,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657791289797</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="[add] 缩减日志">
+      <created>1657791884368</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1657791884368</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -168,7 +175,9 @@
     <MESSAGE value="[add] 记录客户端端口" />
     <MESSAGE value="[add] tcp版本提交" />
     <MESSAGE value="[add] tcp版本完成" />
-    <option name="LAST_COMMIT_MESSAGE" value="[add] tcp版本完成" />
+    <MESSAGE value="[add] 缩减日志" />
+    <MESSAGE value="[add] 优化" />
+    <option name="LAST_COMMIT_MESSAGE" value="[add] 优化" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
