@@ -79,6 +79,7 @@ class TcpServer : Thread(), TcpServerInterface {
         }catch (e:Exception){
             //e.printStackTrace()
             errorEvent?.onError(e)
+            select(selector)
         }
     }
 
@@ -141,6 +142,7 @@ class TcpServer : Thread(), TcpServerInterface {
                 break
             }
         }
+        if (readLength == -1) return
         dataEvent?.onData(byteArrayOutputStream.toByteArray(), channel)
         byteArrayOutputStream.close()
     }

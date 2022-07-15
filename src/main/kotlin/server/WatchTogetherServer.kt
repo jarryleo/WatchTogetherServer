@@ -26,15 +26,15 @@ object WatchTogetherServer {
     fun start() {
         tcpServer.subscribe(sPort,
             dataEvent = { data, channel ->
-                val json = String(data)
+                val text = String(data)
                 //log("receive ${channel.addressText()}: $json")
-                val bean = json.jsonToBean(VideoModel::class.java)
-                if (bean != null) {
-                    dispatcher(bean, channel)
-                }else{
-                    //json 解析错误，关闭连接，防止攻击
-                    log("${channel.addressText()} JsonSyntaxException")
-                    channel.close()
+                text.split("\n").forEach { json ->
+                    if (json.startsWith("{")) {
+                        val bean = json.jsonToBean(VideoModel::class.java)
+                        if (bean != null) {
+                            dispatcher(bean, channel)
+                        }
+                    }
                 }
             },
             standbyEvent = {
