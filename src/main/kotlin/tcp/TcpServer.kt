@@ -73,7 +73,16 @@ class TcpServer : Thread(), TcpServerInterface {
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT)
         serverChannel = serverSocketChannel
         standbyEvent?.standby()
-        //遍历选择器事件
+        try {
+            //遍历选择器事件
+            select(selector)
+        }catch (e:Exception){
+            //e.printStackTrace()
+            errorEvent?.onError(e)
+        }
+    }
+
+    private fun select(selector: Selector) {
         while (selector.select() > 0) {
             val keys = selector.selectedKeys()
             val it = keys.iterator()
@@ -90,11 +99,11 @@ class TcpServer : Thread(), TcpServerInterface {
                 if (key.isReadable) {
                     receive(key)
                 }
-                if (key.isWritable) {
+                /*if (key.isWritable) {
                     send(key)
-                }
+                }*/
                 if (key.isConnectable) {
-                    //log("Connectable!")
+                    log("Connectable!")
                 }
             }
         }
@@ -142,7 +151,7 @@ class TcpServer : Thread(), TcpServerInterface {
      */
     private fun send(key: SelectionKey) {
         //val buffer = (key.attachment() as? ByteBuffer) ?: ByteBuffer.allocate(1024)
-        val channel = key.channel() as? SocketChannel ?: return
+        //val channel = key.channel() as? SocketChannel ?: return
         //log("isWritable : ${channel.addressText()}")
     }
 

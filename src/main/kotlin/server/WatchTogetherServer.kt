@@ -41,7 +41,7 @@ object WatchTogetherServer {
                 log("Watch Together start success!")
             },
             errorEvent = {
-                log("Watch Together start failed!")
+                log("error : ${it.message}")
             }
         )
     }
