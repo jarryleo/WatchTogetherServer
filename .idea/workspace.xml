@@ -34,6 +34,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -204,7 +205,14 @@
       <option name="project" value="LOCAL" />
       <updated>1658116409046</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="[add] 优化时间同步逻辑">
+      <created>1658118009680</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1658118009680</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -222,7 +230,8 @@
     <MESSAGE value="[add] 增加退出房间功能" />
     <MESSAGE value="[add] 优化" />
     <MESSAGE value="[add] 代码优化，Readme" />
-    <option name="LAST_COMMIT_MESSAGE" value="[add] 代码优化，Readme" />
+    <MESSAGE value="[add] 优化时间同步逻辑" />
+    <option name="LAST_COMMIT_MESSAGE" value="[add] 优化时间同步逻辑" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

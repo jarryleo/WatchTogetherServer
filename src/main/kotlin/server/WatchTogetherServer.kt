@@ -60,8 +60,13 @@ object WatchTogetherServer {
     private fun send(videoModel: VideoModel, channel: SocketChannel) {
         videoModel.timestamp = System.currentTimeMillis()
         videoModel.isOwner = channel == videoModel.getRoom()?.ownerChannel
-        val json = videoModel.toJson()
-        channel.write(ByteBuffer.wrap(json.toByteArray()))
+        val json = videoModel.toJson() + "\n"
+        try {
+            channel.write(ByteBuffer.wrap(json.toByteArray()))
+        } catch (e: Exception) {
+            //e.printStackTrace()
+            videoModel.getRoom()?.clientSet?.remove(channel)
+        }
         //log("send to ${channel.addressText()} : $json")
     }
 
@@ -170,11 +175,11 @@ object WatchTogetherServer {
     private fun clientSync(model: VideoModel, channel: SocketChannel) {
         val room = model.getRoom()
         if (room == null || room.ownerChannel == channel) return
-        val clientTime  = room.videoModel.timestamp
+        val clientTime = room.videoModel.timestamp
         val serverTime = System.currentTimeMillis()
-        val diff = if (serverTime > clientTime){
+        val diff = if (serverTime > clientTime) {
             serverTime - clientTime + 500
-        }else{
+        } else {
             1000
         }
         val position = room.videoModel.position + (diff / 1000).toInt()
