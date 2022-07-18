@@ -7,7 +7,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="635f7a37-00d5-46eb-ac37-da46f08be91e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/kotlin/server/Action.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/Main.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/server/VideoModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/server/VideoModel.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/server/WatchTogetherServer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/server/WatchTogetherServer.kt" afterDir="false" />
     </list>
@@ -24,6 +27,7 @@
         <option value="Kotlin File" />
         <option value="Kotlin Interface" />
         <option value="Kotlin Class" />
+        <option value="Kotlin Enum" />
       </list>
     </option>
   </component>
@@ -190,7 +194,14 @@
       <option name="project" value="LOCAL" />
       <updated>1657870990040</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="[add] 优化">
+      <created>1657871743705</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1657871743705</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -204,10 +215,10 @@
     <MESSAGE value="[add] tcp版本提交" />
     <MESSAGE value="[add] tcp版本完成" />
     <MESSAGE value="[add] 缩减日志" />
-    <MESSAGE value="[add] 优化" />
     <MESSAGE value="[add] 优化服务端稳定性" />
     <MESSAGE value="[add] 增加退出房间功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="[add] 增加退出房间功能" />
+    <MESSAGE value="[add] 优化" />
+    <option name="LAST_COMMIT_MESSAGE" value="[add] 优化" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

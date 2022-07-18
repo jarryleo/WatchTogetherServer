@@ -5,7 +5,6 @@ import ext.log
 import ext.toJson
 import tcp.TcpServer
 import tcp.addressText
-import java.lang.Math.abs
 import java.nio.ByteBuffer
 import java.nio.channels.SocketChannel
 import java.util.concurrent.ConcurrentHashMap
@@ -29,8 +28,11 @@ object WatchTogetherServer {
             dataEvent = { data, channel ->
                 val text = String(data)
                 //log("receive ${channel.addressText()}: $json")
+                //处理tcp的粘包问题
                 text.split("\n").forEach { json ->
-                    if (json.startsWith("{")) {
+                    if (json.startsWith("{") &&
+                        json.endsWith("}")
+                    ) {
                         val bean = json.jsonToBean(VideoModel::class.java)
                         if (bean != null) {
                             dispatcher(bean, channel)
@@ -56,6 +58,7 @@ object WatchTogetherServer {
      * 发送信息
      */
     private fun send(videoModel: VideoModel, channel: SocketChannel) {
+        videoModel.timestamp = System.currentTimeMillis()
         videoModel.isOwner = channel == videoModel.getRoom()?.ownerChannel
         val json = videoModel.toJson()
         channel.write(ByteBuffer.wrap(json.toByteArray()))
@@ -66,12 +69,13 @@ object WatchTogetherServer {
      * 事件分发
      */
     private fun dispatcher(model: VideoModel, channel: SocketChannel) {
-        when (model.action) {
-            "join" -> join(model, channel)
-            "exit" -> exit(model, channel)
-            "url", "play", "pause", "seek" -> changeState(model, channel)
-            "sync" -> clientSync(model, channel)
-            "heartbeat" -> heartbeat(model, channel)
+        when (model.action()) {
+            Action.JOIN -> join(model, channel)
+            Action.EXIT -> exit(model, channel)
+            Action.URL, Action.PLAY, Action.PAUSE, Action.SEEK -> changeState(model, channel)
+            Action.SYNC -> clientSync(model, channel)
+            Action.HEARTBEAT -> heartbeat(model, channel)
+            else -> {}
         }
     }
 
@@ -96,31 +100,32 @@ object WatchTogetherServer {
             val r = Room(roomId, ownerChannel = channel)
             roomMap[roomId] = r
             r.videoModel.roomId = roomId
+            r.videoModel.action = Action.IDLE.cmd
             r.videoModel.isOwner = true
             r.videoModel.timestamp = System.currentTimeMillis()
             log("${channel.addressText()} create room: $roomId")
             send(r.videoModel, channel)
-            r.videoModel.action = "wait"
         } else {
             //房间存在
             if (room.ownerChannel != channel) {
                 val current = System.currentTimeMillis()
                 //房主
                 if (model.isOwner &&
-                    kotlin.math.abs(current - room.ownerLastHeartbeat) > 9){
+                    kotlin.math.abs(current - room.ownerLastHeartbeat) > 9000
+                ) {
                     room.ownerChannel = channel
-                    room.videoModel.action = "join"
+                    room.videoModel.action = Action.JOIN.cmd
                     room.videoModel.isOwner = true
                     log("${channel.addressText()} reconnect room: $roomId")
-                }else{
+                } else {
                     //观众
                     room.clientSet.add(channel)
-                    room.videoModel.action = "join"
+                    room.videoModel.action = Action.JOIN.cmd
                     room.videoModel.isOwner = false
                     log("${channel.addressText()} join room: $roomId")
                 }
                 send(room.videoModel, channel)
-            }else{
+            } else {
                 room.videoModel.isOwner = true
                 send(room.videoModel, channel)
             }
@@ -135,17 +140,18 @@ object WatchTogetherServer {
         val roomId = model.roomId
         if (roomId.isEmpty()) return
         //判断房间是否存在
-        val room = model.getRoom()?:return
+        val room = model.getRoom() ?: return
         //房主退出(解散房间)
-        if (channel == room.ownerChannel){
+        if (channel == room.ownerChannel) {
             room.ownerLastHeartbeat = 0
             checkRoom()
-        }else{
+        } else {
             //观众退出
             room.clientSet.remove(channel)
         }
         log("${channel.addressText()} exit room: $roomId")
     }
+
     /**
      * 房主改变播放状态，同步到所有客户端
      */
@@ -164,7 +170,7 @@ object WatchTogetherServer {
     private fun clientSync(model: VideoModel, channel: SocketChannel) {
         val room = model.getRoom()
         if (room == null || room.ownerChannel == channel) return
-        room.videoModel.action = "sync"
+        room.videoModel.action = Action.SYNC.cmd
         send(room.videoModel, channel)
     }
 
@@ -176,7 +182,7 @@ object WatchTogetherServer {
         if (room?.ownerChannel == channel) {
             //url 数据一般很长，节省服务器带宽，心跳包不再携带url
             val url = room.videoModel.url
-            if (model.url.isEmpty() && url.isNotEmpty()){
+            if (model.url.isEmpty() && url.isNotEmpty()) {
                 model.url = url
             }
             room.ownerLastHeartbeat = System.currentTimeMillis()
@@ -202,8 +208,8 @@ object WatchTogetherServer {
                         room.ownerChannel = null
                         //关闭所有客户端连接
                         room.clientSet.forEach {
-                            room.videoModel.action = "exit"
-                            send(room.videoModel,it)
+                            room.videoModel.action = Action.EXIT.cmd
+                            send(room.videoModel, it)
                             it.close()
                         }
                     }
