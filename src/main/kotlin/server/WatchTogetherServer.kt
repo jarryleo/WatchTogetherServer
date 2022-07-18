@@ -170,7 +170,16 @@ object WatchTogetherServer {
     private fun clientSync(model: VideoModel, channel: SocketChannel) {
         val room = model.getRoom()
         if (room == null || room.ownerChannel == channel) return
+        val clientTime  = room.videoModel.timestamp
+        val serverTime = System.currentTimeMillis()
+        val diff = if (serverTime > clientTime){
+            serverTime - clientTime + 500
+        }else{
+            1000
+        }
+        val position = room.videoModel.position + (diff / 1000).toInt()
         room.videoModel.action = Action.SYNC.cmd
+        room.videoModel.position = position //计算房主当前进度
         send(room.videoModel, channel)
     }
 
