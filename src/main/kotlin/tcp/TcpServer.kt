@@ -140,7 +140,11 @@ class TcpServer : Thread(), TcpServerInterface {
                     break
                 }
             }
-            if (readLength == -1) return
+            if (readLength == -1) {
+                channel.close()
+                disconnectEvent?.onDisconnect(channel)
+                return
+            }
             dataEvent?.onData(byteArrayOutputStream.toByteArray(), channel)
             byteArrayOutputStream.close()
         } catch (e: Exception) {
@@ -165,7 +169,8 @@ class TcpServer : Thread(), TcpServerInterface {
         try {
             val channel = key.channel() as? SocketChannel ?: return
             disconnectEvent?.onDisconnect(channel)
-            //log("onDisconnect : ${channel.addressText()}")
+            channel.close()
+            log("onDisconnect : ${channel.addressText()}")
         } catch (e: Exception) {
             errorEvent?.onError(e)
         }
